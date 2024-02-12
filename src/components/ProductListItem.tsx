@@ -1,5 +1,5 @@
-import { StyleSheet, Text, View, Image, Pressable } from "react-native";
-import { Link } from "expo-router";
+import { StyleSheet, Text, Image, Pressable } from "react-native";
+import { Link, useSegments } from "expo-router";
 import Colors from "@/constants/Colors";
 import { Product } from "@/app/types";
 
@@ -10,9 +10,18 @@ type ProductListItemProps = {
   product: Product;
 };
 
+type RootSegmentType = '(admin)' | '(user)'
+
 const ProductListItem = ({ product }: ProductListItemProps) => {
+  const segments = useSegments();
+  if (! ['(admin)', '(user)'].includes(segments[0] || '')) {
+    return <Text>Not found</Text>
+  }
+
+  const segment_0: RootSegmentType = segments[0] as RootSegmentType;
+
   return (
-    <Link href={`/menu/${product.id}`} asChild>
+    <Link href={`/${segment_0}/menu/${product.id}`} asChild>
       <Pressable style={styles.container}>
         <Image
           style={styles.image}

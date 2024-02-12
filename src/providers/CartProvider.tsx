@@ -1,4 +1,4 @@
-import { createContext, useContext, PropsWithChildren, useState } from "react";
+import { createContext, useContext, PropsWithChildren, useState, useMemo } from "react";
 import { randomUUID } from "expo-crypto";
 
 import { CartItem, Product, PizzaSize } from "@/app/types";
@@ -7,12 +7,14 @@ type CartType = {
   items: CartItem[];
   addItem: (product: Product, size: PizzaSize) => void;
   updateQuantity: (itemId: string, amount: -1 | 1) => void;
+  total: number;
 };
 
 const CartContext = createContext<CartType>({
   items: [],
   addItem: () => {},
   updateQuantity: () => {},
+  total: 0,
 });
 
 const CartProvider = ({ children }: PropsWithChildren) => {
@@ -52,8 +54,13 @@ const CartProvider = ({ children }: PropsWithChildren) => {
     setItems(updatedItems);
   };
 
+  const total =  useMemo(() => {
+    const result: number = items.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
+    return result.toFixed(3)
+  }, [items]);
+
   return (
-    <CartContext.Provider value={{ items, addItem, updateQuantity }}>
+    <CartContext.Provider value={{ items, addItem, updateQuantity, total }}>
       {children}
     </CartContext.Provider>
   );
