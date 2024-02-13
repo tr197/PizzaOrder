@@ -1,13 +1,15 @@
-import { Stack, useLocalSearchParams, useRouter } from "expo-router";
+import { Stack, useLocalSearchParams, useRouter, Link } from "expo-router";
 import { View, Text, Image, StyleSheet, Pressable } from "react-native";
 import { useState } from "react";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
+
+import Colors from "@/constants/Colors";
 
 import products from "@assets/data/products";
 import { defaultPizzaImage } from "@/components/ProductListItem";
 import Button from "@/components/Button";
 import { useCart } from "@/providers/CartProvider";
 import { PizzaSize } from "@/app/types";
-
 
 const ProductDetailScreen = () => {
   const router = useRouter();
@@ -20,10 +22,12 @@ const ProductDetailScreen = () => {
   const [selectedSize, setSelectedSize] = useState<PizzaSize>("M");
 
   const addToCart = () => {
-    if(!product) {return}
+    if (!product) {
+      return;
+    }
     addItem(product, selectedSize);
-    router.push('/cart');
-  }
+    router.push("/cart");
+  };
 
   if (!product) {
     return <Text>Product not found</Text>;
@@ -31,7 +35,29 @@ const ProductDetailScreen = () => {
 
   return (
     <View style={styles.container}>
-      <Stack.Screen options={{ title: product?.name }} />
+      <Stack.Screen
+        // name="[id]"
+        options={{
+          // title: "Menu",
+          title: product?.name,
+          headerRight: () => (
+            <Link href={`/(admin)/menu/create?id=${id}`} asChild>
+              <Pressable>
+                {({ pressed }) => (
+                  <FontAwesome
+                    name="pencil"
+                    size={25}
+                    color={Colors.light.tint}
+                    style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
+                  />
+                )}
+              </Pressable>
+            </Link>
+          ),
+        }}
+      />
+
+      {/* <Stack.Screen options={{ title: product?.name }} /> */}
       <Image
         source={{ uri: product.image || defaultPizzaImage }}
         style={styles.image}
