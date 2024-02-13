@@ -27,6 +27,14 @@ export type OrderItem = {
 
 export type OrderStatus = 'New' | 'Cooking' | 'Delivering' | 'Delivered';
 
+export const OrderStatusList: OrderStatus[] = [
+  'New',
+  'Cooking',
+  'Delivering',
+  'Delivered',
+];
+
+
 export type Order = {
   id: number;
   created_at: string;

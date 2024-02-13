@@ -4,6 +4,8 @@ import { Order } from '@/app/types';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import dayjs from 'dayjs';
 import { Link, useSegments } from 'expo-router';
+import { RootSegmentType } from './ProductListItem';
+
 
 dayjs.extend(relativeTime);
 
@@ -14,9 +16,14 @@ type OrderListItemProps = {
 
 const OrderListItem = ({ order }: OrderListItemProps) => {
   const segments = useSegments();
+  if (! ['(admin)', '(user)'].includes(segments[0] || '')) {
+    return <Text>Not found</Text>
+  }
+
+  const segment_0: RootSegmentType = segments[0] as RootSegmentType;
 
   return (
-    <Link href={`/(user)/orders/${order.id}`} asChild>
+    <Link href={`/${segment_0}/orders/${order.id.toString()}`} asChild>
       <Pressable style={styles.container}>
         <View>
           <Text style={styles.title}>Order #{order.id}</Text>

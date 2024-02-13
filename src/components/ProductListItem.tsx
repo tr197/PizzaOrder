@@ -10,7 +10,7 @@ type ProductListItemProps = {
   product: Product;
 };
 
-type RootSegmentType = '(admin)' | '(user)'
+export type RootSegmentType = '(admin)' | '(user)'
 
 const ProductListItem = ({ product }: ProductListItemProps) => {
   const segments = useSegments();
